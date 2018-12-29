@@ -1,7 +1,7 @@
 #include "OpticalFlow.h"
 
 using namespace cv;
-using namespace cv::gpu;
+//using namespace cv::gpu;
 using namespace pcl;
 using namespace std;
 

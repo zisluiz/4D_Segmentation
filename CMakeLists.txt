@@ -1,28 +1,39 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
-SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
-
-IF(WIN32 OR win64)
-   SET(CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll)
-ELSE()
-   SET(CMAKE_FIND_LIBRARY_SUFFIXES .a)
-ENDIF()
-
-
-find_package(PCL 1.7 REQUIRED)
-find_package( OpenCV REQUIRED )
- 
 project(4D_Segmentation)
 
-add_subdirectory(src)
+#SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 
-include_directories(C:/opencv/build)
+#IF(WIN32 OR win64)
+#   SET(CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll)
+#ELSE()
+#   SET(CMAKE_FIND_LIBRARY_SUFFIXES .a)
+#ENDIF()
+
+set (PROJECT_VERSION 0.1)
+set(CMAKE_BUILD_TYPE Release)
+set(CXX_COMPILER_FLAGS -03 -fopenmp=libomp)
+
+#find_package(PCL 1.7 REQUIRED)
+#find_package( OpenCV REQUIRED )
+ 
+#add_subdirectory(src)
+#include_directories(C:/opencv/build)
+#include_directories(${PCL_INCLUDE_DIRS})
+#include_directories(${4D_Segmentation_SOURCE_DIR}/include)
+#link_directories(${PCL_LIBRARY_DIRS})
+#add_definitions(${PCL_DEFINITIONS})
+
+find_package(PCL 1.8 REQUIRED)
+
 include_directories(${PCL_INCLUDE_DIRS})
-include_directories(${4D_Segmentation_SOURCE_DIR}/include)
-
 link_directories(${PCL_LIBRARY_DIRS})
-
 add_definitions(${PCL_DEFINITIONS})
+
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/include)
+
+add_subdirectory(src)
 
 file(GLOB_RECURSE 4D_Segmentation_HEADERS include/*.h)
 file(GLOB_RECURSE 4D_Segmentation_SOURCES src/*.cpp)
@@ -39,4 +50,10 @@ add_library (4D_Segmentation src/4D_Segmentation.cpp src/RegionTree.cpp src/Grap
 target_link_libraries (4D_Segmentation ${PCL_LIBRARIES} ${OpenCV_LIBS})
 
 add_executable (Test_Seg src/TestVideoSegmentation.cpp ${4D_Segmentation_HEADERS})
-target_link_libraries (Test_Seg 4D_Segmentation ${PCL_LIBRARIES} ${OpenCV_LIBS})
+set_target_properties(4D_Segmentation PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS ON
+)
+#target_link_libraries (Test_Seg 4D_Segmentation ${PCL_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries (Test_Seg 4D_Segmentation ${PCL_LIBRARY_DIRS} ${OPENCV_LIBRARY_DIRS} tbb)

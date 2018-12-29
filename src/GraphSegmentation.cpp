@@ -32,7 +32,7 @@ inline T square(const T &x) { return x*x; };
 MAKE_FILTER(fgauss, (float) expf(-0.5*square(i/sigma)));
 
 using namespace std;
-using namespace concurrency;
+//using namespace concurrency;
 using namespace pcl;
 using namespace cv;
 
@@ -771,7 +771,7 @@ void iSegment_graph(int num_vertices, int num_edges, Edge*& edges, float c, Univ
 { 
 	Edge* pEdge = edges, *edgesEnd = pEdge + num_edges;
 	// sort edges by weight
-	concurrency::parallel_sort(pEdge, edgesEnd);
+	tbb::parallel_sort(pEdge, edgesEnd);
 	//thrustsort(pEdge,edgesEnd);
 
 	// init thresholds
@@ -812,7 +812,7 @@ void iSegment_graph(int num_vertices, int num_edges, Edge3D*& edges, float c, Un
 { 
 	Edge3D* pEdge = edges, *edgesEnd = pEdge + num_edges;
 	// sort edges by weight
-	concurrency::parallel_sort(pEdge, edgesEnd);
+	tbb::parallel_sort(pEdge, edgesEnd);
 	//thrustsort(pEdge,edgesEnd);
 
 	// init thresholds
@@ -852,7 +852,7 @@ void iSegmentStep2_graph(int num_vertices, int num_edges, Edge3D*& edges, float 
 { 
 	Edge3D* pEdge = edges, *edgesEnd = pEdge + num_edges;
 	// sort edges by weight
-	concurrency::parallel_sort(pEdge, edgesEnd,lessThan3D);
+	tbb::parallel_sort(pEdge, edgesEnd,lessThan3D);
 	//thrustsort2(pEdge,edgesEnd);
 
 	// init thresholds
